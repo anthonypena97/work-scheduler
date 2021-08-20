@@ -5,10 +5,9 @@ populateHours = function () {
 
     $.each(hours, function (i) {
 
-        let hourBlock = $('<div>').addClass("time-block").text(hours[i]);
+        let hourBlock = $('<li>').addClass("list-group-item").text(hours[i]);
 
-        $('.container').append(hourBlock);
-
+        $('.list-group').append(hourBlock);
     })
 
 };
