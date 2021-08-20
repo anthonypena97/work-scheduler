@@ -1,4 +1,9 @@
-// var randomDate = '02/23/1999';
-// var randomFormat = 'MM/DD/YYYY';
-// var convertedDate = moment(randomDate, randomFormat);
-// console.log(convertedDate.format('MM/DD/YY'));
+var today = moment().format("[Today is] dddd MMMM Do[,] YYYY");
+
+updateToday = function () {
+    $('#currentDay').text(today);
+}
+
+console.log(today);
+
+updateToday();
