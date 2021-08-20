@@ -3,35 +3,43 @@ var time = moment().format("Ha");
 var currentTime = moment(time, "Ha");
 var hours = ["9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm"]
 
-populateHours = function () {
+populateHourBlocks = function () {
 
     $.each(hours, function (i) {
 
         var scheduleHour = moment(hours[i], "Ha");
+        var id = "#" + i.toString();
 
-        let hourBlock = $('<li>').addClass("list-group-item").text(hours[i]);
+        var hourContainer = $('<li>').attr('id', i).addClass("row time-block");
+        $('.list-group').append(hourContainer);
 
-        // console.log(scheduleHour)
+        var hourDiv = $('<div>').addClass("col-sm-2 hour").text(hours[i]);
+        $(id).append(hourDiv);
+
+        var textDiv;
+
         // if hour block is in the past
-
         if (moment(currentTime).isAfter(scheduleHour)) {
 
-            $(hourBlock).addClass("past");
+            textDiv = $('<textarea>').addClass("col-8 description past").text("text");
+            $(id).append(textDiv);
 
             // if hour block is in the present
         } if (moment(currentTime).isSame(scheduleHour)) {
 
-            $(hourBlock).addClass("present");
+            textDiv = $('<textarea>').addClass("col-8 present").text("text");
+            $(id).append(textDiv);
 
         } if (moment(currentTime).isBefore(scheduleHour)) {
 
             // if hour block is in the future
-            $(hourBlock).addClass("future");
+            textDiv = $('<textarea>').addClass("col-8 future").text("text");
+            $(id).append(textDiv);
 
         }
 
-
-        $('.list-group').append(hourBlock);
+        var saveDiv = $('<i>').addClass("col-md-2 saveBtn").text("save");
+        $(id).append(saveDiv);
 
     })
 
@@ -45,7 +53,7 @@ pageLoad = function () {
 
     updateToday();
 
-    populateHours();
+    populateHourBlocks();
 
 }
 
