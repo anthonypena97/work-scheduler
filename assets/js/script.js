@@ -1,17 +1,17 @@
 var today = moment().format("[Today is] dddd MMMM Do[,] YYYY");
+var date = moment().format("MMM Do YYYY");
 var time = moment().format("Ha");
 var currentTime = moment(time, "Ha");
-var hours = ["9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm"]
-
-saveText = function (id) {
-    id = id.slice(4);
-    var textTarget = "#txt-" + id;
-    console.log($(textTarget).val());
-}
+var hours = ["9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm"];
+var list = JSON.parse(localStorage.getItem('work-scheduler')) || [];
+var updatedList = [];
 
 populateHourBlocks = function () {
 
     $.each(hours, function (i) {
+
+        var textDiv;
+        var txt = "txt-" + i;
 
         var scheduleHour = moment(hours[i], "Ha");
         var id = "#" + i.toString();
@@ -23,12 +23,7 @@ populateHourBlocks = function () {
         var hourDiv = $('<div>').addClass("col-sm-2 hour").text(hours[i]);
         $(id).append(hourDiv);
 
-        var textDiv;
-
-        var txt = "txt-" + i;
-
-        // TEXT AREA
-
+        // TEXT AREA BLOCK
         // if hour block is in the past
         if (moment(currentTime).isAfter(scheduleHour)) {
 
@@ -48,6 +43,7 @@ populateHourBlocks = function () {
             $(id).append(textDiv);
 
         }
+
         var btn = "btn-" + i;
 
         // SAVE BUTTON
@@ -62,13 +58,58 @@ populateHourBlocks = function () {
 
         })
 
-
     })
 
 };
 
+saveText = function (id) {
+
+    // save button id that is pushed when funtion is caleld
+    id = id.slice(4);
+    var textTarget = "#txt-" + id;
+    var taskToDo = $(textTarget).val()
+
+    console.log(taskToDo);
+
+    var toDo = {
+        id: id,
+        toDo: taskToDo,
+        date: date
+    }
+
+    list.push(toDo);
+
+    localStorage.setItem('work-scheduler', JSON.stringify(list));
+
+}
+
+loadTasks = function () {
+
+    for (i = 0; i < list.length; i++) {
+
+        if (list[i].date === date) {
+
+            var textArea = "#txt-" + list[i].id;
+            var textContent = list[i].toDo;
+
+            // target text area
+            $(textArea).val(textContent);
+            console.log(list[i]);
+
+            updatedList.push(list[i]);
+
+        }
+
+    };
+
+    list = updatedList;
+
+};
+
 updateToday = function () {
+
     $('#currentDay').text(today);
+
 };
 
 pageLoad = function () {
@@ -77,12 +118,9 @@ pageLoad = function () {
 
     populateHourBlocks();
 
-};
+    loadTasks();
 
-// $("#btn").on("click", function (event) {
-//     console.log("hello")
-//     console.log(event);
-// })
+};
 
 // PAGE LOAD - REFRESHES EVERY 30 MINS
 setInterval(pageLoad(), (1000 * 60) * 30);
